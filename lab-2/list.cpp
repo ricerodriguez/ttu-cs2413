@@ -20,7 +20,7 @@ void List::del(Node *node) {
 List::~List(){
      this->del(this->head);
 }
-
+// This works
 void List::ins(int ind, int dat) {
      if (ind > this->size || ind < 0) {
           throw 420;
@@ -42,7 +42,7 @@ void List::ins(int ind, int dat) {
      }
      this->size++;
 }
-
+// This works
 void List::insBeg(int dat) {
      Node *node_0 = new Node(dat);
      node_0->next = this->head;
@@ -50,15 +50,20 @@ void List::insBeg(int dat) {
      this->size++;
 }
 
+// This is currently broken, results in segmentation fault
 void List::insEnd(int dat) {
      Node *node_0 = new Node(dat);
-     Node *temp = this->head;   // New temporary node, start it by pointing at the head
-     while(temp){
-          temp = temp->next;
+     Node *temp = this->head;   // New temporary node, start it by pointing to head
+     if(this->head == 0) {
+          this->head = node_0;    // Head points to new node now
+     } else {
+          while(temp->next != 0){
+               temp = temp->next;
+          }
+          // Make the temp node point to the new node, new node is now being pointed to in the list
+          // and pointing to the next node in the list
+          temp->next = node_0;
      }
-     // Make the temp node point to the new node, new node is now being pointed to in the list
-     // and pointing to the next node in the list
-     temp->next = node_0;
      node_0->next = 0;
      this->size++;
 }
@@ -82,7 +87,7 @@ void List::delThis(int ind) {
      this->size--;
      delete kill;
 }
-
+// This works
 void List::delBeg() {
      Node *kill;
      kill = this->head;
