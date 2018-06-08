@@ -20,7 +20,7 @@ void List::del(Node *node) {
 List::~List(){
      this->del(this->head);
 }
-// This works
+// This doesn't work, inserts everything at the beginning
 void List::ins(int ind, int dat) {
      if (ind > this->size || ind < 0) {
           throw 420;
@@ -57,7 +57,7 @@ void List::insEnd(int dat) {
      if(this->head == 0) {
           this->head = node_0;    // Head points to new node now
      } else {
-          while(temp->next != 0){
+          while(temp != 0){
                temp = temp->next;
           }
           // Make the temp node point to the new node, new node is now being pointed to in the list
