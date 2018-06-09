@@ -20,20 +20,23 @@ void List::del(Node *node) {
 List::~List(){
      this->del(this->head);
 }
-// This doesn't work, inserts everything at the beginning
+
+// This works
 void List::ins(int ind, int dat) {
      if (ind > this->size || ind < 0) {
           throw 420;
      }
      Node *node_0 = new Node(dat);
+     Node *temp = this->head;   // New temporary node, start it by pointing at the head
      // If index is 0, insert at the beginning
-     if(~ind) {
+     if(ind == 0) {
           node_0->next = this->head; // New node's pointer points to head
           this->head = node_0;       // Head is updated to point to new node
      } else {
-          Node *temp = this->head;   // New temporary node, start it by pointing at the head
-          for(int i = 1; i < ind; i++) {
-               temp = temp->next;    // Ends up with temp pointing to node where new node should point to
+          int i;
+          while(i < ind - 1 && temp->next != 0){
+               temp = temp->next;
+               i++;
           }
           node_0->next = temp->next;
           // Make the temp node point to the new node, new node is now being pointed to in the list
@@ -50,21 +53,21 @@ void List::insBeg(int dat) {
      this->size++;
 }
 
-// This is currently broken, results in segmentation fault
+// This works
 void List::insEnd(int dat) {
      Node *node_0 = new Node(dat);
+     node_0->next = 0;
      Node *temp = this->head;   // New temporary node, start it by pointing to head
      if(this->head == 0) {
           this->head = node_0;    // Head points to new node now
      } else {
-          while(temp != 0){
+          while(temp->next != 0){
                temp = temp->next;
           }
           // Make the temp node point to the new node, new node is now being pointed to in the list
           // and pointing to the next node in the list
           temp->next = node_0;
      }
-     node_0->next = 0;
      this->size++;
 }
 
@@ -95,19 +98,25 @@ void List::delBeg() {
      this->size--;
      delete kill;
 }
-
+// This works
 void List::delEnd() {
-     Node *kill;
-     Node *temp = head;
-     for(int i = 1; i < this->size; i++) {
-          temp = temp->next;
+     Node *kill = this->head;
+     if(this->head == 0) {
+          throw 2;
+     } else if (this->head->next == 0) {
+         delete this->head;
+         this->head = 0;
+     } else {
+          while(kill->next != 0) {
+               kill = kill->next;
+          }
+          delete kill->next;
+          kill->next = 0;
      }
-     kill = temp->next;
-     temp->next = kill->next;
      this->size--;
      delete kill;
 }
-
+// This works
 void List::view() {
      Node *temp;
      if(size) { // Check if there's even anything there
@@ -118,11 +127,11 @@ void List::view() {
           throw 2; // List is empty, nothing to view
      }
 }
-
+// This works
 int List::getSize() {
      return this->size;
 }
-
+// This works
 int List::getDat(int ind) {
      Node *temp = head;
      for(int i = 0; i < ind; i++) {

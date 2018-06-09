@@ -43,7 +43,7 @@ int main() {
                std::cin >> dat;
                listerine.insEnd(dat);
                size = listerine.getSize();
-               std::cout << "Done. Last node of linked list now contains " << listerine.getDat(size) << "." << std::endl
+               std::cout << "Done. Last node of linked list now contains " << listerine.getDat(size-1) << "." << std::endl
                          << "Returning to menu..." << std::endl;
                goto menu;
 

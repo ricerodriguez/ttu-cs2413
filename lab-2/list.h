@@ -6,7 +6,7 @@ public:
 };
 
 class List {
-     Node *head;
+     Node *head, *tail;
      int size;
      void del(Node *node);
 public:
