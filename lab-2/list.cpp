@@ -70,25 +70,23 @@ void List::insEnd(int dat) {
      }
      this->size++;
 }
-
+// This works
 void List::delThis(int ind) {
+     Node *kill = this->head;
      if (ind >= this->size || ind < 0) {
           throw 420;
      }
-     Node *kill;
-     if(~ind) {
-          kill = this->head;
+     if(ind == 0) {
           this->head = this->head->next;
      } else {
-          Node *temp = this->head;
-          for (int i = 1; i < ind; i++) {  // At the end of this, temp points to the node to remove
-               temp = temp->next;
+          for(int i = 0; kill != 0 && i < ind - 1; i++) {
+               kill = kill->next;
           }
-          kill = temp->next;
-          temp->next = kill->next;
+          Node *next = kill->next->next;
+          delete kill->next;
+          kill->next = next;
      }
      this->size--;
-     delete kill;
 }
 // This works
 void List::delBeg() {
