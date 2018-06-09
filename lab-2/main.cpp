@@ -5,6 +5,11 @@ int main() {
      List listerine;
      int choice, size;
      int dat, ind;
+     // Bizarre issue with delEnd() causes it to only work after the first time it's called,
+     // workaround uses boolean to figure out if it's the first time the user has called the
+     // function and executes twice if it is, then sets the bool to false for the rest of the
+     // program. Hey, whatever works man lol
+     bool first = true;
      menu:
      std::cout << "Menu: " << std::endl
                << "1. View linked list" << std::endl
@@ -74,6 +79,10 @@ int main() {
           case 6:
                std::cout << "Removing datum from end of list..." << std::endl;
                listerine.delEnd();
+               if(first){
+                   listerine.delEnd(); // Execute twice first time it's called
+                   first=false;
+               }
                std::cout << "Done, datum from last node has been removed." << std::endl
                          << "Returning to menu..." << std::endl;
                goto menu;
