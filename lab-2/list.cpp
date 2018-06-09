@@ -96,30 +96,33 @@ void List::delBeg() {
      this->size--;
      delete kill;
 }
-// This works
+// This works, sort of. For some reason doesn't work first time it's used, works every time afterwards...?????
 void List::delEnd() {
      Node *kill = this->head;
-     if(this->head == 0) {
+     if(kill == 0) {
           throw 2;
-     } else if (this->head->next == 0) {
+     } else if (kill->next == 0) {
          delete this->head;
          this->head = 0;
      } else {
-          while(kill->next != 0) {
+          for(int i = 0; kill != 0 && i < size - 1; i++) {
                kill = kill->next;
           }
+          // delete kill->next;
+          Node *next = kill->next->next;
           delete kill->next;
           kill->next = 0;
      }
      this->size--;
-     delete kill;
 }
 // This works
 void List::view() {
      Node *temp;
+     int i = 0;
      if(size) { // Check if there's even anything there
-          for (temp = this->head; temp != 0; temp = temp->next)  {
-               std::cout << temp->datum << std::endl;
+          for (temp = this->head; temp != 0 && (temp != 0 || i <= size); temp = temp->next)  {
+               i++;
+               std::cout << "Node " << i - 1 << ": " << temp->datum << std::endl;
           }
      } else {
           throw 2; // List is empty, nothing to view
