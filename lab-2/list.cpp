@@ -99,11 +99,16 @@ void List::delBeg() {
 // This works, sort of. For some reason doesn't work first time it's used, works every time afterwards...?????
 void List::delEnd() {
      Node *temp = this->head;
-     for(int i = 1; i < this->size; i++){
-          temp = temp->next;
+     if(size > 1) {
+          for(int i = 1; i < this->size - 1; i++){
+               temp = temp->next;
+          }
+          temp->next = 0;
+          delete temp->next;
+     } else {
+          this->head = this->head->next;
+          delete temp;
      }
-     temp->next = 0;
-     delete temp->next;
      this->size--;
 }
 // This works
@@ -126,8 +131,8 @@ int List::getSize() {
 }
 // This works
 int List::getDat(int ind) {
-     Node *temp = head;
-     for(int i = 0; i < ind; i++) {
+     Node *temp = this->head;
+     for(int i = 1; i < ind; i++) {
           temp = temp->next;
      }
      return temp->datum;

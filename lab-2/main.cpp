@@ -8,6 +8,7 @@ int main() {
      bool first = true;
      std::cout << "The linked list is currently empty." << std::endl;
      menu:
+     // std::cout << "The size of the linked list is " << listerine.getSize() << std::endl;
      std::cout << "Menu: " << std::endl
                << "1. Insert datum at beginning of list" << std::endl
                << "2. Insert datum at end of list" << std::endl
@@ -38,7 +39,7 @@ int main() {
                std::cin >> dat;
                listerine.insEnd(dat);
                size = listerine.getSize();
-               std::cout << "Done. Last node of linked list now contains " << listerine.getDat(size-1) << "." << std::endl;
+               std::cout << "Done. Last node of linked list now contains " << listerine.getDat(size) << "." << std::endl;
                std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
                std::cout << "Displaying resulting linked list..." << std::endl;
                listerine.view();
