@@ -1,3 +1,4 @@
+## Lab 1
 Create a simple C++ program to instantiate an object that will store two numbers and perform
 mathematical operations using those numbers as operands.
 The class should have a header called Adder.h and a .cpp file called Adder.cpp. Testing should be
@@ -12,3 +13,5 @@ operands and take no arguments. Get() should take one argument to specify which 
 Set() should take two arguments, the first to specify which operand to set and the second to specify
 the number to set the operand equal to. Your code should document each function, and the class, with
 comments.
+
+#### Status: Complete

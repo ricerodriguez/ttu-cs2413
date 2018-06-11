@@ -125,7 +125,7 @@ void List::view() {
                std::cout << "Node " << i - 1 << ": " << temp->datum << std::endl;
           }
      } else {
-          throw 2; // List is empty, nothing to view
+          std::cout << "Linked list is currently empty." << std::endl; // List is empty, nothing to view
      }
 }
 // This works
