@@ -81,10 +81,10 @@ int main() {
           case 5:
                std::cout << "Removing datum from end of list..." << std::endl;
                listerine.delEnd();
-               if(first && listerine.getSize() > 1) {
-                    listerine.delEnd();
-                    first = false;
-               }
+               // if(first && listerine.getSize() > 1) {
+               //      listerine.delEnd();
+               //      first = false;
+               // }
                std::cout << "Done, datum from last node has been removed." << std::endl;
                std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
                std::cout << "Displaying resulting linked list..." << std::endl;

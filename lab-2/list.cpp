@@ -98,34 +98,26 @@ void List::delBeg() {
 }
 // This works, sort of. For some reason doesn't work first time it's used, works every time afterwards...?????
 void List::delEnd() {
-     Node *kill = this->head;
-     if(kill == 0) {
-          throw 2;
-     } else if (kill->next == 0) {
-         delete this->head;
-         this->head = 0;
-     } else {
-          for(int i = 0; kill != 0 && i < size - 1; i++) {
-               kill = kill->next;
-          }
-          // delete kill->next;
-          Node *next = kill->next->next;
-          delete kill->next;
-          kill->next = 0;
+     Node *temp = this->head;
+     for(int i = 1; i < this->size; i++){
+          temp = temp->next;
      }
+     temp->next = 0;
+     delete temp->next;
      this->size--;
 }
 // This works
 void List::view() {
-     Node *temp;
+     Node *node = this->head;
+     // Node *temp;
      int i = 0;
-     if(size) { // Check if there's even anything there
-          for (temp = this->head; temp != 0 && (temp != 0 || i <= size); temp = temp->next)  {
-               i++;
-               std::cout << "Node " << i - 1 << ": " << temp->datum << std::endl;
-          }
-     } else {
-          std::cout << "Linked list is currently empty." << std::endl; // List is empty, nothing to view
+     while(node != 0){
+          std::cout << "Node " << i << ": " << node->datum << std::endl;
+          node = node->next;
+          i++;
+     }
+     if (this->head == 0) {
+          std::cout << "Linked list is currently empty." << std::endl;
      }
 }
 // This works

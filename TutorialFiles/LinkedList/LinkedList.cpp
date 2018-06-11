@@ -70,23 +70,23 @@ int LinkedList::remove(int index){
      return datum;
 }
 
-int LinkedList::get(int ind){
+int LinkedList::get(int index){
      if (index >= size || index < 0) {
           throw "Invalid index";
      }
      Node *temp = head;
-     for(int i = 0; i < ind; i++) {
+     for(int i = 0; i < index; i++) {
           temp = temp->next;
      }
      return temp->datum;
 }
 
-void LinkedList::set(int ind, int dat){
-     if (ind >= size || ind < 0) {
+void LinkedList::set(int index, int dat){
+     if (index >= size || index < 0) {
           throw 420;
      }
      Node *temp = head;
-     for(int i = 0; i < ind; i++) {
+     for(int i = 0; i < index; i++) {
           temp = temp->next;
      }
      temp->datum = dat;
