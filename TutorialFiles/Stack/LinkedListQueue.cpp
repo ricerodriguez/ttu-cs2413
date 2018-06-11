@@ -1,4 +1,4 @@
-#include "QueueIllustration.h"
+#include "LinkedListQueue.h"
 #include <iostream>
 
 Node::Node(int datum) {

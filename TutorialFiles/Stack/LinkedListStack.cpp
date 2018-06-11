@@ -1,4 +1,4 @@
-#include "StackIllustration.h"
+#include "LinkedListStack.h"
 #include <iostream>
 
 Node::Node(int datum) {
