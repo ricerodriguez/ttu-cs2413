@@ -10,4 +10,4 @@ Create a singly linked list having 5 nodes when instantiated. Create the followi
 
 This program should be menu driven, and once it is run, it will first display the initial linked list, and then ask the user for his/her option. The options will be the functions you are going to implement. The menu should be in a loop and will only end, if the user presses the option to terminate the program. After each operation is performed, the resulting linked list will be displayed to the user, before asking for his/her option again. Remember to consider every possible outcome of the program, and handle it accordingly.
 
-#### Status: Almost complete, issues discovered
+#### Status: Complete
