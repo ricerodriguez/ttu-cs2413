@@ -1,14 +1,15 @@
-// Use for Stack.cpp and Stack.h
+// Use for StackQueue.cpp and StackQueue.h
 #include "Stack.h"
 #include <iostream>
 #include <string>
 
 int main() {
+     Queue queue;
      ArrStack astack;
      ListStack lstack;
      string input;
      int datum;
-
+     // Test by replacing astack with lstack or queue
      while(true) {
           std::cout << "Enter command\n: ";
           std::cin >> input;

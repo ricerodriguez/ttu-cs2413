@@ -34,10 +34,12 @@ void LinkedList::insert(int index, int datum){
           if (this->head) {
                this->head->prev = newNode;
           }
+          this->head = newNode;
           if(~tail) {
                this->tail = this->head;
+               // Equivalent line:
+               // this->tail = newNode;
           }
-          this->head = newNode;
           else if (index == this->size) {
                newNode->prev = this->tail;
                this->tail->next = newNode;
