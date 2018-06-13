@@ -36,6 +36,7 @@ BST::~BST() {
      this->destr_helper(this->root);
 }
 
+// Function to insert a new node iteratively
 void BST::insert(int datum) {
      // Create a new node
      Node *newNode = new Node(datum);
@@ -45,9 +46,11 @@ void BST::insert(int datum) {
           // Set new node to be the root of the tree
           this->root = newNode;
      }
-     // Otherwise, start from the root
+     // Otherwise, find where to stick the new node into
      else {
+          // Start the reference node at the root
           Node *temp = this->root;
+          // While temp is non-empty...
           while(temp) {
                // Note: This is a design decision to not allow duplicates in the tree, this is not
                // strictly necessary for a binary search tree and designs incorporating duplicates
@@ -92,7 +95,7 @@ void BST::insert(int datum) {
      }
 }
 
-// Recursive insert
+// Function to insert a new node recursively, uses a helper function
 void BST::recur_insert(int datum) {
      // Create new node
      Node *newNode = new Node(datum);
@@ -110,7 +113,7 @@ void BST::recur_insert(int datum) {
 
 }
 
-// Recursive insert helper function
+// Helper function for the recursive insert function
 // Note that other designs are possible that do not incorporate a helper function
 void BST::rec_inst_helper(Node *node, Node *newNode) {
      // Note: Design decision was made to not consider or allow duplicates in the tree, this was
@@ -143,6 +146,103 @@ void BST::rec_inst_helper(Node *node, Node *newNode) {
           else {
                // Put the new node in the spot to the right since we know the spot is empty
                node->right = newNode;
+          }
+     }
+}
+
+// Function to search for a node and return the node if it's found, otherwise return null
+BST::Node* BST::search(int datum) {
+     // Start the reference node at the root of the tree
+     Node *temp = this->root;
+     // While the reference node being checked is non-empty and we haven't found the node yet
+     while(temp && temp->datum != datum) {
+          // If the node we're looking for is less than the reference node being checked
+          if(datum < temp->datum) {
+               // Node must be left of reference node, check node to the left
+               temp = temp->left;
+          }
+          else {
+               // Otherwise, node must be right of reference node, check node to the right
+               temp = temp->right;
+          }
+     }
+     // Reference node has exited the loop, if the node was in the tree, temp must be the node we
+     // were looking for, otherwise temp is null (exited the loop by being empty)
+     return temp;
+}
+
+// Function to iteratively remove a node from the tree. Note that the only argument needed is the
+// value of the node because of the design decision made to not allow duplicates. This function has
+// a dependency on the search function
+void BST::remove(int datum) {
+     // Reference node is set to the node which will be removed, found using the search function
+     Node *temp1 = this->search(datum);
+     // Create boolean leftChild which is true if temp1 is a left child of its parent
+     bool leftChild;
+     // Create boolean isRoot which is true if temp1 is the root node
+     bool isRoot;
+     // If the search function returns a null (node does not exist)...
+     if(!temp1) {
+          // ... Throw an error, because we can't remove a node that doesn't exist
+          throw "Number not in tree";
+     }
+     // Otherwise, since we found the node, start the process to remove it
+     else {
+          // First, check if the node has a parent node
+          if(temp1->parent) {
+               // Determine if left or right child
+               if(temp1->parent->left == temp1) {
+                    leftChild = true;
+               } else {
+                    leftChild = false;
+               }
+          // If the node does not have a parent node, then it must be the root node
+          } else {
+               // Set the boolean to true so we know the node is the root node
+               isRoot = true;
+          }
+          // Execute the remove
+          // Check for children of the node
+          if(!temp1->left) {
+               // If the left of temp1 is not set then all we have left is the right child (or there
+               // are no children)
+               if(!temp1->right) {
+                    // If the right of temp1 is also not set, then there are no children and we just
+                    // have to delete the node
+
+                    // If the node is the root node, just delete the root because there aren't any
+                    // parent nodes to worry about
+                    if(isRoot) {
+                         this->root = 0;
+                    }
+
+                    // Otherwise, check if the node is left or right of its parent
+                    else if(leftChild) {
+                         // Cut the connection between the parent and its left child (temp1)
+                         temp1->parent->left = 0;
+                    } else {
+                         // Cut the connection between the parent and its right child (temp1)
+                         temp1->parent->right = 0;
+                    }
+               // If there is a right child (but not a left child)...
+               } else {
+                    // First check if the node is the root
+                    if(isRoot) {
+                         // If it's the root, delete the root, set the child as the new root
+                         this->root = temp1->right;
+                    // Otherwise, if node is not the root
+                    } else {
+                         // If the node was the left child of its parent node...
+                         if(leftChild) {
+                              // Cut the connection between the node and it's parent, replace node's
+                              // position in tree with the node's child
+                              temp1->parent->left = temp1->right;
+                         } else {
+                              temp1->parent->right = temp1->right;
+                         }
+                    }
+               }
+               delete temp1;
           }
      }
 }

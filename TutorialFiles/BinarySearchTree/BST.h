@@ -18,13 +18,13 @@ public:
      ~BST();
      // Insert a number iteratively into the tree
      void insert(int);
-     // Insert a number recursively into the tree
+     // Insert a number recursively into the tree using a helper function
      void recur_insert(int);
-     // Recursive helper function for recur_insert
+     // Helper function for the recursive insert function
      void rec_inst_helper(Node*, Node*);
-     // Remove a number from the tree
+     // Remove a number iteratively from the tree
      void remove(int);
-     // Returns true if the number being searched for was found, returns false otherwise
-     bool search();
+     // Returns the node being searched for if it's found, otherwise returns null
+     Node *search();
 
 }
