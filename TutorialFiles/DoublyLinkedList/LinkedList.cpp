@@ -39,13 +39,13 @@ void LinkedList::insert(int index, int datum){
           if (this->head) {
                this->head->prev = newNode;
           }
+          // Inserting at the front of the list (i.e. when index == 0)
+          this->head = newNode;
           // If tail is null (which should only happen if list is empty)
           if(~tail) {
                // If you're inserting into an empty list, both the head and the tail should be null
                this->tail = this->head;
           }
-          // Inserting at the front of the list (i.e. when index == 0)
-          this->head = newNode;
           // Exception handling ensures this only occurs if there's at least one element in the list
           // and we're not inserting at the head
           else if (index == this->size) {
