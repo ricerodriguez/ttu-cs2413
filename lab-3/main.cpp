@@ -1,5 +1,6 @@
 #include "doublelist.h"
 #include <iostream>
+#include <exception>
 
 int main() {
      List listerine;
@@ -56,8 +57,10 @@ int main() {
                std::cin >> ind;
                try {
                     listerine.ins(ind,dat);
-               } catch (int error) {
-                    std::cerr << "ERROR " << error << ": Hey listen here numbnuts you can't do that" << std::endl;
+               } catch(std::exception& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                    std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl
+                              << "Returning to menu..." << std::endl;
                     goto menu;
                }
                std::cout << "Done. Space at " << ind << " now contains " << listerine.getDat(ind) << "." << std::endl;
@@ -70,7 +73,14 @@ int main() {
 
           case 4:
                std::cout << "Removing datum from beginning of list..." << std::endl;
-               listerine.delBeg();
+               try {
+                    listerine.delBeg();
+               } catch(std::exception& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                    std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl
+                              << "Returning to menu..." << std::endl;
+                    goto menu;
+               }
                std::cout << "Done, datum from first node has been removed." << std::endl;
                std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
                std::cout << "Displaying resulting linked list..." << std::endl;
@@ -81,11 +91,14 @@ int main() {
 
           case 5:
                std::cout << "Removing datum from end of list..." << std::endl;
-               listerine.delEnd();
-               // if(first && listerine.getSize() > 1) {
-               //      listerine.delEnd();
-               //      first = false;
-               // }
+               try {
+                    listerine.delEnd();
+               } catch(std::exception& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                    std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl
+                              << "Returning to menu..." << std::endl;
+                    goto menu;
+               }
                std::cout << "Done, datum from last node has been removed." << std::endl;
                std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
                std::cout << "Displaying resulting linked list..." << std::endl;
@@ -100,9 +113,8 @@ int main() {
                std::cin >> ind;
                try {
                     listerine.delThis(ind);
-               }
-               catch(int error) {
-                    std::cerr << "ERROR " << error << ": Hey listen here numbnuts you can't do that" << std::endl;
+               } catch(std::exception& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
                     goto menu;
                }
                std::cout << "Done. Datum from " << ind << " now empty." << std::endl;

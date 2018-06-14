@@ -1,5 +1,6 @@
 #include "doublelist.h"
 #include <iostream>
+
 Node::Node(int datum){
      this->datum = datum;
      this->next = 0;
@@ -21,16 +22,20 @@ List::~List(){
      this->del(this->head);
 }
 
-// This works
 void List::ins(int index, int datum) {
      if (index > this->size || index < 0) {
-          throw 420;
+          throw InvInd();
      }
      Node *newNode = new Node(datum);
      Node *temp = this->head;   // New temporary node, start it by pointing at the head
 
      // If index is 0, insert at the beginning
      if(index == 0) {
+          // If there's nothing in the list...
+          if(!this->head) {
+               this->head = newNode;
+               this->tail = newNode;
+          }
           newNode->next = this->head; // New node's pointer points to head
           this->head->prev = newNode;
           this->head = newNode;       // Head is updated to point to new node
@@ -55,7 +60,7 @@ void List::ins(int index, int datum) {
 
      // If index isn't 0 and it's not the size of the list, prepare to insert somewhere in the middle
      else {
-          int i;
+          int i = 0;
           while(i < index - 1 && temp->next != 0){
                temp = temp->next;
                i++;
@@ -69,16 +74,22 @@ void List::ins(int index, int datum) {
      }
      this->size++;
 }
-// This works
+
 void List::insBeg(int datum) {
      Node *newNode = new Node(datum);
-     newNode->next = this->head;
-     this->head->prev = newNode;
-     this->head = newNode;
+     // If the list is empty...
+     if(!this->head) {
+          this->head = newNode;
+          this->tail = newNode;
+     }
+     else {
+          newNode->next = this->head;
+          this->head->prev = newNode;
+          this->head = newNode;
+     }
      this->size++;
 }
 
-// This works
 void List::insEnd(int datum) {
      Node *newNode = new Node(datum);
      newNode->next = 0;
@@ -98,39 +109,55 @@ void List::insEnd(int datum) {
      }
      this->size++;
 }
-// This works
+
 void List::delThis(int index) {
      Node *kill = this->head;
-     if (index >= this->size || index < 0) {
-          throw 420;
+     Node *temp = this->head;
+     Node *nextNode = this->head;
+     if (index > this->size || index < 0) {
+          throw InvInd();
      }
+     // If index is 0, we're deleting from the beginning of the list
      if(index == 0) {
-          this->head = this->head->next;
+          this->delBeg();
+     // If index is the same as size, we're deleting from the end of the list
+     } else if(index == this->size) {
+          this->delEnd();
+     // Otherwise, we're deleting from somewhere between the head and the tail
      } else {
-          for(int i = 0; kill != 0 && i < index - 1; i++) {
-               kill = kill->next;
+          int i = 0;
+          while(i < index - 1 && temp->next != 0){
+               temp = temp->next;
+               i++;
           }
-          Node *next = kill->next->next;
-          delete kill->next;
-          kill->next = next;
+          kill = temp->next;
+          nextNode = kill->next;
+          temp->next = nextNode;
+          nextNode->prev = temp;
+          delete kill;
+          this->size--;
      }
-     this->size--;
 }
-// This works
+
 void List::delBeg() {
-     if(~this->head) {
-          throw "List is empty, nothing to delete";
+     Node *kill = this->head;
+     if(!this->head) {
+          throw EmptyList();
      }
-     Node *kill;
-     kill = this->head;
-     this->head = this->head->next;
+     else if(kill == this->tail) {
+          delete kill;
+          this->head = 0;
+          this->tail = 0;
+     } else {
+          this->head = this->head->next;
+          delete kill;
+     }
      this->size--;
-     delete kill;
 }
 
 void List::delEnd() {
-     if(~this->head) {
-          throw "List is empty, nothing to delete";
+     if(!this->head) {
+          throw EmptyList();
      }
      Node *temp = this->head;
      if(size > 1) {
@@ -147,25 +174,40 @@ void List::delEnd() {
      }
      this->size--;
 }
-// This works
+
 void List::view() {
      Node *node = this->head;
      // Node *temp;
      int i = 0;
+     // If there's nothing in the head (list is empty)
+     if (this->head == 0) {
+          std::cout << "Linked list is currently empty." << std::endl;
+     } else {
+     std::cout << "This linked list has " << this->size << " nodes." << std::endl;
      while(node != 0){
-          std::cout << "Node " << i << ": " << node->datum << std::endl;
+          if(node == this->head) {
+               if(node == this->tail) {
+                    std::cout << "Node " << i << ": " << this->head->datum << " (Both the head and tail)" << std::endl;
+                    break;
+               }
+               // std::cout << "Node " << i << " (Head): " << node->datum << std::endl;
+               std::cout << "Node " << i << ": " << this->head->datum << " (Head)" << std::endl;
+          } else if(node->next == 0) {
+               // std::cout << "Node " << i << " (Tail): " << node->datum << std::endl;
+               std::cout << "Node " << i << ": " << this->tail->datum << " (Tail)" << std::endl;
+          } else {
+               std::cout << "Node " << i << ": " << node->datum << std::endl;
+          }
           node = node->next;
           i++;
      }
-     if (this->head == 0) {
-          std::cout << "Linked list is currently empty." << std::endl;
      }
 }
-// This works
+
 int List::getSize() {
      return this->size;
 }
-// This works
+
 int List::getDat(int index) {
      Node *temp = this->head;
      for(int i = 1; i < index; i++) {

@@ -1,8 +1,21 @@
+#include <exception>
 class Node {
 public:
      Node(int);
      int datum;
      Node *next, *prev;
+};
+
+struct InvInd : public std::exception {
+     const char * what () const throw () {
+          return "Invalid index! Please choose something within range. ";
+     }
+};
+
+struct EmptyList : public std::exception {
+     const char * what () const throw () {
+          return "List is currently empty! There is nothing to delete. ";
+     }
 };
 
 class List {
