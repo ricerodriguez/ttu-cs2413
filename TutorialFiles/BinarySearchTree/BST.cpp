@@ -72,6 +72,7 @@ void BST::insert(int datum) {
                     else {
                          // Put the new node in the spot to the left since we know the spot is empty
                          temp->left = newNode;
+                         newNode->parent = temp;
                          // Insert completed, break out of loop
                          break;
                     }
@@ -87,6 +88,7 @@ void BST::insert(int datum) {
                     else {
                          // Put new node in the spot to the right
                          temp->right = newNode;
+                         newNode->parent = temp;
                          // Insert completed, break out of loop
                          break;
                     }
@@ -243,6 +245,46 @@ void BST::remove(int datum) {
                     }
                }
                delete temp1;
+          }
+          // If the right node of the reference node is null
+          if(!temp1->right) {
+               if(!temp1->left) {
+                    if(isRoot) {
+                         this->root = 0;
+                    } else if (leftChild) {
+                         temp1->parent->left = 0;
+                    } else {
+                         temp1->parent->right = 0;
+                    }
+               } else {
+                    if(isRoot) {
+                         this->root = temp1->left;
+                    } else {
+                         if(leftChild) {
+                              temp1->parent->left = temp1->left;
+                         } else {
+                              temp1->parent->right = temp1->left;
+                         }
+                    }
+               }
+               delete temp1;
+          } else {
+               Node *temp2 = temp1->left;
+               if(temp2->right == 0) {
+                    // Moves the left datum into the parent spot
+                    temp1->datum = temp2->datum;
+                    // Moves the node of that node to the parent spot
+                    temp1->left = temp2->left;
+               } else {
+                    // While we can keep going...
+                    while(temp2->right != 0) {
+                         // Keep going right
+                         temp2 = temp2->right;
+                    }
+                    temp1->datum = temp2->datum;
+                    temp2->parent->right = temp2->left;
+               }
+               delete temp2;
           }
      }
 }
