@@ -13,7 +13,9 @@ class BST {
      // Helper function for destructor
      void destr_helper(Node*);
      // This is the in order traversal
-     void in_order(Node*)
+     void in_order(Node*);
+     void pre_order(Node*);
+     void post_order(Node*);
 public:
      // Constructor
      BST();
@@ -36,5 +38,6 @@ public:
      //   3. post-order
      // This starts the process so that we can pass the root to it within the class
      void traverse();
+
 
 }

@@ -304,3 +304,23 @@ void BST::in_order(Node* node) {
           this->in_order(node->right);
      }
 }
+
+void BST::pre_order(Node* node) {
+     if(!node) {
+          return;
+     } else {
+          std::cout << node->datum << std::endl;
+          this->pre_order(node->left);
+          this->in_order(node->right);
+     }
+}
+
+void BST::post_order(Node* node) {
+     if(!node) {
+          return;
+     } else {
+          this->post_order(node->left);
+          this->in_order(node->right);
+          std::cout << node->datum << std::endl;
+     }
+}
