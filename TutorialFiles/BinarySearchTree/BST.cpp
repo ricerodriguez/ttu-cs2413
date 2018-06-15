@@ -1,5 +1,5 @@
 #include "BST.h."
-
+#include <iostream>
 // Constructor for the Node encapsulated by the BST class
 BST::Node::Node(int datum) {
      // Initialize all variables to null.
@@ -286,5 +286,21 @@ void BST::remove(int datum) {
                }
                delete temp2;
           }
+     }
+}
+
+// Function for use outside of class (e.g. in main.cpp) which can access the root within this class
+// definition. This is necessary because the root is private access.
+void BST::traverse() {
+     this->in_order(this->root);
+}
+
+void BST::in_order(Node* node) {
+     if(!node) {
+          return;
+     } else {
+          this->in_order(node->left);
+          std::cout << node->datum << std::endl;
+          this->in_order(node->right);
      }
 }

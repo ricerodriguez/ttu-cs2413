@@ -24,6 +24,8 @@ int main() {
                     }
                } else if (input == "exit") {
                     break;
+               } else if (input == "traverse") {
+                    bst.traverse();
                } else {
                     std::cout << "Invalid command" << std::endl;
                }

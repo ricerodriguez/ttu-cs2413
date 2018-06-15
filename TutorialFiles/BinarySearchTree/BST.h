@@ -10,7 +10,10 @@ class BST {
      }
      // Top node in the tree
      Node *root;
+     // Helper function for destructor
      void destr_helper(Node*);
+     // This is the in order traversal
+     void in_order(Node*)
 public:
      // Constructor
      BST();
@@ -26,5 +29,12 @@ public:
      void remove(int);
      // Returns the node being searched for if it's found, otherwise returns null
      Node *search();
+     // Traversing a tree means visiting every node in the tree. There are three different types of
+     // traversals:
+     //   1. in order
+     //   2. pre-order
+     //   3. post-order
+     // This starts the process so that we can pass the root to it within the class
+     void traverse();
 
 }
