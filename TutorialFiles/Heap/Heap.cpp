@@ -185,16 +185,40 @@ int Heap::pop() {
      }
 }
 
-void heapify(int *arr, int size) {
+void Heap::heapify(int *arr, int size) {
      for(int i = 0; i < size; i++) {
           this->push(arr[i]);
      }
+}
+
+bool Heap::isEmpty() {
+     return !this->tail;
+}
+
+void Heap::clear() {
+     this->destr_helper(this->root);
+     this->root = 0;
+     this->tail = 0;
+}
+
+int Heap::peek() {
+     if(this->isEmpty()) {
+          throw "Heap is empty";
+     }
+     return this->root->datum;
 }
 
 ArrHeap::ArrHeap() {
      this->arr = new int[10];
      this->tail = 0;
      this->size = 10;
+}
+
+ArrHeap::ArrHeap(int *arr, int size) {
+     this->arr = new int[10];
+     this->tail = 0;
+     this->size = 10;
+     this->heapify(arr,size);
 }
 
 ArrHeap::~ArrHeap() {
@@ -249,6 +273,8 @@ void ArrHeap::downheap(int index) {
                          this->swap(index, left);
                          // Move down to that child
                          index = left;
+                    } else {
+                         break;
                     }
                } else {
                // Current is bigger than the right child, so we have to move down
@@ -256,7 +282,8 @@ void ArrHeap::downheap(int index) {
                     this->swap(index, right);
                     // Move down to that child
                     index = right;
-                    }
+               } else {
+                    break;
                }
           }
           // If there is only a left child
@@ -265,11 +292,14 @@ void ArrHeap::downheap(int index) {
                if(this->arr[left] < this->arr[index]) {
                     this->swap(index, left);
                     index = left;
+               } else {
+                    break;
                }
           }
           left = this->left(index);
           right = this->right(index);
      }
+}
 }
 
 void ArrHeap::push(int num) {
@@ -306,4 +336,25 @@ int ArrHeap::pop() {
      this->arr[0] = this->arr[this->tail];
      this->downheap(0);
      return retVal;
+}
+
+bool ArrHeap::isEmpty() {
+     return !this->tail;
+}
+
+void ArrHeap::heapify(int* arr, int size) {
+     for(int i = 0; i < size; i++) {
+          this->push(arr[i]);
+     }
+}
+
+void ArrHeap::clear() {
+     this->tail = 0;
+}
+
+int ArrHeap::peek() {
+     if(this->isEmpty()) {
+          throw "Heap is empty";
+     }
+     return this->arr[0];
 }

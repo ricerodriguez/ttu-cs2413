@@ -20,6 +20,7 @@ public:
      void push(int);
      int pop();
      void heapify(int*, int);
+     void clear();
 };
 
 class ArrHeap {
@@ -30,11 +31,13 @@ class ArrHeap {
      int right(int);
      int left(int);
      void swap(int, int);
+     void clear();
 public:
      ArrHeap();
      ~ArrHeap();
      void push(int);
      int pop();
+     bool isEmpty();
      void heapify(int*,int);
 
 }
