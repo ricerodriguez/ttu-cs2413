@@ -3,7 +3,8 @@
 #include <string>
 
 int main() {
-     Heap myheap;
+     ArrHeap myheap;
+     // Heap myheap;
      string input;
      int val;
      while(true) {
@@ -19,6 +20,12 @@ int main() {
           } else {
                std::cout << "Invalid command" << std::endl;
           }
+     }
+     // Overloaded constructor demo
+     int arr[] {14, 9, 7, 13, 23, 29};
+     Heap heap2(arr,6);
+     for(int i = 0; i < 7; i++) {
+          std::cout << heap2.pop() << std::endl;
      }
      return 0;
 }

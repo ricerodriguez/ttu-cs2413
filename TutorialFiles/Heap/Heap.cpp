@@ -14,6 +14,12 @@ Heap::Heap() {
      this->tail = 0;
 }
 
+Heap::Heap(int* arr, int size) {
+     this->root = 0;
+     this->tail = 0;
+     this->heapify(arr, size);
+}
+
 // Helper function for the destructor of the Heap class
 void Heap::destr_helper(Node* node) {
      if(node) {
@@ -112,7 +118,7 @@ void Heap::push(int datum) {
                } else {
                     temp->parent->right = newNode;
                     // Update the parent of the new node
-                    newNode->parent = temp;
+                    newNode->parent = temp->parent;
                     // Update the tail pointer
                     this->tail = newNode;
                     // Fix the rest of the heap so it's ordered correctly for a valid heap
@@ -143,12 +149,6 @@ int Heap::pop() {
      // Set root datum to tail datum
      this->root->datum = this->tail->datum;
 
-     // Remove the tail from the tree
-     if(this->tail->parent->left == this->tail) {
-          this->tail->parent->left = 0;
-     } else {
-          this->tail->parent->right = 0;
-     }
 
      // Downheap the root
      this->downheap(this->root);
@@ -169,9 +169,141 @@ int Heap::pop() {
           // Keep moving down the right side
           temp = temp->right;
      }
-     // Delete the old tail first
-     delete this->tail;
-     // Then set the tail equal to temp
-     this->tail = temp;
+     if(this->tail != this->root) {
+          // Remove the tail from the tree
+          if(this->tail->parent->left == this->tail) {
+               this->tail->parent->left = 0;
+          } else {
+               this->tail->parent->right = 0;
+          }
+     } else {
+          // Delete the old tail first
+          delete this->tail;
+          // Then set the tail equal to temp
+          this->tail = temp;
+          return retVal;
+     }
+}
+
+void heapify(int *arr, int size) {
+     for(int i = 0; i < size; i++) {
+          this->push(arr[i]);
+     }
+}
+
+ArrHeap::ArrHeap() {
+     this->arr = new int[10];
+     this->tail = 0;
+     this->size = 10;
+}
+
+ArrHeap::~ArrHeap() {
+     delete this->arr;
+}
+
+int ArrHeap::parent(int index) {
+     return (index - 1) / 2;
+}
+
+int ArrHeap::left(int index) {
+     return index * 2 + 1;
+}
+
+int ArrHeap::right(int index) {
+     return index * 2 + 2;
+}
+
+void ArrHeap::swap(int i1, int i2) {
+     int temp = this->arr[i1];
+     this->arr[i1] = this->arr[i2];
+     this->arr[i2] = temp;
+}
+
+// Index is the index of the item we want to upheap
+void ArrHeap::upheap(int index) {
+     int parent = this->parent(index);
+     // While we have a parent and the item in that parent is greater than the item in this index
+     while(parent >= 0 && this->arr[this->parent(index)] > this->arr[index]) {
+          // If whatever is in the parent of the index is greater than what is
+          // in the index, then the two need to swap positions
+          this->swap(index, parent);
+          index = parent;
+          // Update for the new parent
+          parent = this->parent(index);
+     }
+}
+
+void ArrHeap::downheap(int index) {
+     int left = this->left(index);
+     int right = this->right(index);
+     // While there is at least a left child
+     while(left < this->tail) {
+          if(right < this->tail) {
+               // Then we have both a left and a right child
+               // Check which child is smaller
+
+               // Left child is smaller than the right child
+               if (this->arr[left] < this->arr[right]) {
+                    // Current is bigger than the left child, so we have to move down
+                    if(this->arr[left] < this->arr[index]) {
+                         this->swap(index, left);
+                         // Move down to that child
+                         index = left;
+                    }
+               } else {
+               // Current is bigger than the right child, so we have to move down
+               if(this->arr[right] < this->arr[index]) {
+                    this->swap(index, right);
+                    // Move down to that child
+                    index = right;
+                    }
+               }
+          }
+          // If there is only a left child
+          else {
+               // Current is bigger than left child
+               if(this->arr[left] < this->arr[index]) {
+                    this->swap(index, left);
+                    index = left;
+               }
+          }
+          left = this->left(index);
+          right = this->right(index);
+     }
+}
+
+void ArrHeap::push(int num) {
+     // If we've reached the end of the array, make a new array that's twice as
+     // big and copy the old array into the new array
+     if(this->tail == this->size) {
+          // Create new array
+          int *newArr = new int[this->size*2];
+          // Copy the data
+          for(int i = 0; i < this->size; i++) {
+               newArr[i] = this->arr[i];
+          }
+          // Double the size of the array
+          this->size *= 2;
+          // Delete the old array
+          delete this->arr;
+          // Set the new array
+          this->arr = newArr;
+     }
+     // Push the new item onto the heap
+     this->arr[this->tail] = num;
+     // Upheap to fix the order
+     this->upheap(this->tail);
+     // Increment tail
+     this->tail++;
+}
+
+int ArrHeap::pop() {
+     if (this->tail == 0) {
+          throw "Heap is empty";
+     }
+     int retVal = this->arr[0];
+     this->tail--;
+     this->arr[0] = this->arr[this->tail];
+     this->downheap(0);
      return retVal;
 }
