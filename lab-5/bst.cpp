@@ -137,11 +137,13 @@ void BST::del(int datum) {
                kill->datum = kill->right->datum;
                kill->right = 0;
                delete kill->right;
+               return;
           } else if (!kill->right && kill->left) {
                // Nothing in right child, child must be on left.
                kill->datum = kill->left->datum;
                kill->left = 0;
                delete kill->left;
+               return;
           } else {
                // Booleans on lines 114-116 are broken
                throw BrokBools();
@@ -155,8 +157,12 @@ void BST::del(int datum) {
                temp = temp->left;
           }
           kill->datum = temp->datum;
-          temp->parent->left = 0;
+          // The following line does NOT successfully delete the pointer.
+          // Probably due to non-dynamically allocated memory, however this is
+          // undesirable as I don't WANT to create a new node, I'm trying to
+          // delete one that already exists.
           delete temp;
+          return;
      }
 }
 
