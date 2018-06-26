@@ -30,7 +30,7 @@ public:
      // Remove a number iteratively from the tree
      void remove(int);
      // Returns the node being searched for if it's found, otherwise returns null
-     Node *search();
+     Node *search(int);
      // Traversing a tree means visiting every node in the tree. There are three different types of
      // traversals:
      //   1. in order

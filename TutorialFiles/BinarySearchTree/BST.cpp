@@ -120,7 +120,7 @@ void BST::recur_insert(int datum) {
 void BST::rec_inst_helper(Node *node, Node *newNode) {
      // Note: Design decision was made to not consider or allow duplicates in the tree, this was
      // already mentioned and explained earlier
-     if(Node->datum == newNode->datum) {
+     if(node->datum == newNode->datum) {
           throw "No duplicates allowed";
      }
      // If the new node is less than the given node (should go to the left of given node)...

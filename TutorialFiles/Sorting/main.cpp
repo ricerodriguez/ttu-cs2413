@@ -72,6 +72,37 @@ void bubble_sort(int *arr, int size) {
      }
 }
 
+int partition(int *arr, int hi, int low) {
+     int div = arr[low];
+     while (hi > low) {
+          if (arr[low] < div) {
+               low++;
+          }
+          else {
+               int temp = arr[hi];
+               arr[hi] = arr[low];
+               arr[low] = temp;
+               hi--;
+          }
+     }
+     if (arr[low] < div) {
+          low++;
+     } else {
+          int temp = arr[end];
+          arr[end] = arr[low];
+          arr[low] = temp;
+     }
+     return low;
+}
+
+void quick_sort(int *arr, int hi, int low) {
+     if (hi > low) {
+          int p = partition(arr, hi, low);
+          quick_sort(arr, p-1, low);
+          quick_sort(arr, hi, p+1);
+     }
+}
+
 void print_array(int *arr, int size) {
      std::cout << "{ " << arr[0];
      for(int i = 1; i < size; i++) {
