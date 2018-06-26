@@ -25,4 +25,4 @@ be formatted as follows on the command line
 `print`  
 `peek`  
 
-#### Status: Barely started
+#### Status: Completed

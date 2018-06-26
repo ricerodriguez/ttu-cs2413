@@ -22,59 +22,6 @@ List::~List(){
      this->del(this->head);
 }
 
-void List::ins(int index, int datum) {
-     if (index > this->size || index < 0) {
-          throw InvInd();
-     }
-     Node *newNode = new Node(datum);
-     Node *temp = this->head;   // New temporary node, start it by pointing at the head
-
-     // If index is 0, insert at the beginning
-     if(index == 0) {
-          // If there's nothing in the list...
-          if(!this->head) {
-               this->head = newNode;
-               this->tail = newNode;
-          }
-          newNode->next = this->head; // New node's pointer points to head
-          this->head->prev = newNode;
-          this->head = newNode;       // Head is updated to point to new node
-
-     // If index is the size of the list, insert at the end
-     } else if (index == this->size) {
-          newNode->next = 0;
-          if(this->head == 0) {
-               this->head = newNode;    // Head points to new node now
-               this->tail = newNode;    // Tail points to new node now
-          } else {
-               while(temp->next != 0){
-                    temp = temp->next;
-               }
-               // Make the temp node point to the new node, new node is now being pointed to in the list
-               // and pointing to the next node in the list
-               temp->next = newNode;
-               newNode->prev = temp;
-               this->tail = newNode;
-          }
-     }
-
-     // If index isn't 0 and it's not the size of the list, prepare to insert somewhere in the middle
-     else {
-          int i = 0;
-          while(i < index - 1 && temp->next != 0){
-               temp = temp->next;
-               i++;
-          }
-          newNode->next = temp->next;
-          // Make the temp node point to the new node, new node is now being pointed to in the list
-          // and pointing to the next node in the list
-          temp->next = newNode;
-          newNode->next->prev = newNode;
-          newNode->prev = temp;
-     }
-     this->size++;
-}
-
 void List::insBeg(int datum) {
      Node *newNode = new Node(datum);
      // If the list is empty...
@@ -110,48 +57,17 @@ void List::insEnd(int datum) {
      this->size++;
 }
 
-void List::delThis(int index) {
-     Node *kill = this->head;
-     Node *temp = this->head;
-     Node *nextNode = this->head;
-     if (index > this->size || index < 0) {
-          throw InvInd();
-     }
-     // If index is 0, we're deleting from the beginning of the list
-     if(index == 0) {
-          this->delBeg();
-     // If index is the same as size, we're deleting from the end of the list
-     } else if(index == this->size) {
-          this->delEnd();
-     // Otherwise, we're deleting from somewhere between the head and the tail
-     } else {
-          int i = 0;
-          while(i < index - 1 && temp->next != 0){
-               temp = temp->next;
-               i++;
-          }
-          kill = temp->next;
-          nextNode = kill->next;
-          temp->next = nextNode;
-          nextNode->prev = temp;
-          delete kill;
-          this->size--;
-     }
-}
-
 int List::delBeg() {
+     int datum = this->head->datum;
      Node *kill = this->head;
-     int datum;
      if(!this->head) {
           throw EmptyList();
      }
      else if(kill == this->tail) {
-          datum = this->head->datum;
           delete kill;
           this->head = 0;
           this->tail = 0;
      } else {
-          datum = this->head->datum;
           this->head = this->head->next;
           delete kill;
      }
@@ -218,7 +134,23 @@ int List::getDat(int index) {
      for(int i = 1; i < index; i++) {
           temp = temp->next;
      }
-     return temp->datum;
+     if(temp){
+          return temp->datum;
+     } else {
+          throw InvInd();
+     }
+}
+
+Node* List::getHead() {
+     return this->head;
+}
+
+Node* List::getTail() {
+     return this->tail;
+}
+
+bool List::isEmpty() {
+     return !this->head;
 }
 
 Stack::Stack() {
@@ -226,27 +158,62 @@ Stack::Stack() {
 }
 
 Stack::~Stack(){
+     // stack->del(stack->getHead());
      delete this->stack;
 }
 
 void Stack::push(int datum) {
-     stack->ins(0, datum);
+     stack->insBeg(datum);
 }
 
 int Stack::pop() {
+     if(stack->getHead() == 0) {
+          throw EmptyList();
+     }
      return stack->delBeg();
 }
 
 int Stack::peek() {
+     if(stack->getHead() == 0) {
+          throw EmptyStack();
+     }
      return stack->getDat(0);
 }
 
 void Stack::print() {
-     stack->view();
+     Node* node = stack->getHead();
+     Node *head = stack->getHead();
+     Node *tail = stack->getTail();
+     int i = 0;
+     // If there's nothing in the head (list is empty)
+     if (head == 0) {
+          std::cout << "Stack is currently empty." << std::endl;
+     } else {
+     std::cout << "This stack has " << stack->getSize() << " nodes." << std::endl;
+     while(node != 0){
+          if(node == head) {
+               if(node == tail) {
+                    std::cout << "Node " << i << ": " << stack->getDat(0) << " (Top/Bottom)" << std::endl;
+                    break;
+               }
+               // std::cout << "Node " << i << " (Head): " << node->datum << std::endl;
+               std::cout << "Node " << i << ": " << head->datum << " (Top of Stack)" << std::endl;
+          } else if(node->next == 0) {
+               // std::cout << "Node " << i << " (Tail): " << node->datum << std::endl;
+               std::cout << "Node " << i << ": " << tail->datum << " (Bottom of Stack)" << std::endl;
+          } else {
+               std::cout << "Node " << i << ": " << node->datum << std::endl;
+          }
+          node = node->next;
+          i++;
+     }
+     }
+
+
 }
 
-void Stack::empty() {
-     this->~Stack();
+bool Stack::empty() {
+     return stack->isEmpty();
 }
 
 Queue::Queue() {
@@ -258,21 +225,52 @@ Queue::~Queue() {
 }
 
 void Queue::push(int datum) {
-     queue->ins(queue->getSize(), datum);
+     queue->insEnd(datum);
 }
 
 int Queue::pop() {
-     return queue->delBeg();
+     return queue->delEnd();
 }
 
 int Queue::peek() {
+     if(queue->getHead() == 0) {
+          throw EmptyQueue();
+     }
      return queue->getDat(queue->getSize());
 }
 
-void Queue::empty() {
-     this->~Queue();
+bool Queue::empty() {
+     return queue->isEmpty();
 }
 
 void Queue::print() {
-     queue->view();
+     // queue->view();
+     Node* node = queue->getHead();
+     Node *head = queue->getHead();
+     Node *tail = queue->getTail();
+     int i = 0;
+     // If there's nothing in the head (list is empty)
+     if (head == 0) {
+          std::cout << "Queue is currently empty." << std::endl;
+     } else {
+     std::cout << "This queue has " << queue->getSize() << " nodes." << std::endl;
+     while(node != 0){
+          if(node == head) {
+               if(node == tail) {
+                    std::cout << "Node " << i << ": " << queue->getDat(0) << " (Top/Bottom)" << std::endl;
+                    break;
+               }
+               // std::cout << "Node " << i << " (Head): " << node->datum << std::endl;
+               std::cout << "Node " << i << ": " << head->datum << " (Top of Queue)" << std::endl;
+          } else if(node->next == 0) {
+               // std::cout << "Node " << i << " (Tail): " << node->datum << std::endl;
+               std::cout << "Node " << i << ": " << tail->datum << " (Bottom of Queue)" << std::endl;
+          } else {
+               std::cout << "Node " << i << ": " << node->datum << std::endl;
+          }
+          node = node->next;
+          i++;
+     }
+     }
+
 }
