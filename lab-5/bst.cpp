@@ -41,30 +41,20 @@ void BST::ins_helper(Node* node, Node* newNode) {
                this->ins_helper(node->left, newNode);
           } else {
                node->left = newNode;
+               newNode->parent = node;
           }
      } else {
           if(node->right) {
                this->ins_helper(node->right, newNode);
           } else {
                node->right = newNode;
+               newNode->parent = node;
           }
      }
 }
 
 
-BST::Node* BST::find(int datum) {
-     Node* temp = this->root;
-     while(temp && temp->datum != datum) {
-          if(datum < temp->datum) {
-               temp = temp->left;
-          } else {
-               temp = temp->right;
-          }
-     }
-     return temp;
-}
-
-BST::Node* BST::find_main(int datum) {
+BST::Node* BST::find_addr(int datum) {
      Node* temp = this->root;
      while(temp && temp->datum != datum) {
           if(datum < temp->datum) {
@@ -79,84 +69,94 @@ BST::Node* BST::find_main(int datum) {
      return temp;
 }
 
-void BST::del(int datum) {
-     bool isLeftChild = false;
-     bool isRoot = false;
-     Node* temp1 = this->find(datum);
-     if(!temp1) {
+void BST::find(int datum) {
+     bool lastDirLeft = false;
+     // bool firstDir = true;
+     int count_left = 0;
+     int count_right = 0;
+     Node* temp = this->root;
+     while(temp && temp->datum != datum) {
+          if(datum < temp->datum) {
+               if(temp == this->root) {
+                    std::cout << "Starting the search at the left of the root..." << std::endl;
+                    // firstDir = false;
+               } else if(!lastDirLeft) {
+                    std::cout << "Went right for " << count_right << " nodes, now going left..." << std::endl;
+                    count_right = 0;
+               }
+               temp = temp->left;
+               lastDirLeft = true;
+               count_left++;
+          } else {
+               if(temp == this->root) {
+                    std::cout << "Starting the search at the right of the root..." << std::endl;
+               } else if(lastDirLeft) {
+                    std::cout << "Went left for " << count_left << " nodes, now going right..." << std::endl;
+                    count_left = 0;
+               }
+               temp = temp->right;
+               lastDirLeft = false;
+               count_right++;
+          }
+     }
+     if(!temp) {
           throw NotFound();
+     } else if (temp == this->root) {
+          std::cout << "Node was found at the root of the tree." << std::endl;
+     } else if(lastDirLeft) {
+          std::cout << "Went left for " << count_left << " nodes, where node with datum " << datum << " was found." << std::endl;
      } else {
-          if(temp1->parent) {
-               isRoot = false;
-               if(temp1->parent->left == temp1) {
-                    isLeftChild = true;
-               } else {
-                    isLeftChild = false;
-               }
-          } else {
-               isRoot = true;
-          }
+          std::cout << "Went right for " << count_right << " nodes, where node with datum " << datum << " was found." << std::endl;
+     }
+}
 
-          if(!temp1->left) {
-               if(!temp1->right) {
-                    if(isRoot) {
-                         this->root = 0;
-                    } else if(isLeftChild) {
-                         temp1->parent->left = 0;
-                    } else {
-                         temp1->parent->right = 0;
-                    }
-               } else {
-                    if(isRoot) {
-                         this->root = temp1->right;
-                    } else {
-                         if(isLeftChild) {
-                              temp1->parent->left = temp1->right;
-                         } else {
-                              temp1->parent->right = temp1->right;
-                         }
-                    }
-               }
-               delete temp1;
-          } if(!temp1->right) {
-               if(!temp1->left) {
-                    if(isRoot) {
-                         this->root = 0;
-                    } else if(isLeftChild) {
-                         temp1->parent->left = 0;
-                    } else {
-                         temp1->parent->right = 0;
-                    }
-               } else {
-                    if(isRoot) {
-                         this->root = temp1->left;
-                    } else {
-                         if(isLeftChild) {
-                              temp1->parent->left = temp1->left;
-                         } else {
-                              temp1->parent->right = temp1->left;
-                         }
-                    }
-               }
-               delete temp1;
-          } else {
-               Node* temp2 = temp1->left;
-               if(temp2->right == 0) {
-                    // Moves the left datum into the parent spot
-                    temp1->datum = temp2->datum;
-                    // Moves the node of that node to the parent spot
-                    temp1->left = temp2->left;
-               } else {
-                    // While we can keep going...
-                    while(temp2->right != 0) {
-                         // Keep going right
-                         temp2 = temp2->right;
-                    }
-                    temp1->datum = temp2->datum;
-                    temp2->parent->right = temp2->left;
-               }
-               delete temp2;
+// Descriptions of possibilities taken from GeeksForGeeks.org
+void BST::del(int datum) {
+     Node *kill = this->find_addr(datum);
+     bool hasNoChildren = (!kill->left && !kill->right)?true:false;
+     bool hasOneChild = ((!kill->left && kill->right) || (!kill->right && kill->left))?true:false;
+     bool hasTwoChildren = (kill->left && kill->right)?true:false;
+     if (hasNoChildren) {
+          // There's no children, just delete and exit.
+          if (kill == this->root) {
+               // We're in the root, no need to change parents because there are none
+               delete kill;
+               return;
+          } else if (kill->parent->left == kill) {
+               kill->parent->left = 0;
+          } else if (kill->parent->right == kill) {
+               kill->parent->right = 0;
           }
+          delete kill;
+          return;
+     } else if (hasOneChild) {
+          // There's only one child. Copy the child to the node and delete the child.
+          // First, determine which side child is on.
+          if (!kill->left && kill->right) {
+               // Nothing in left child, child must be on right.
+               kill->datum = kill->right->datum;
+               kill->right = 0;
+               delete kill->right;
+          } else if (!kill->right && kill->left) {
+               // Nothing in right child, child must be on left.
+               kill->datum = kill->left->datum;
+               kill->left = 0;
+               delete kill->left;
+          } else {
+               // Booleans on lines 114-116 are broken
+               throw BrokBools();
+          }
+     } else if (hasTwoChildren) {
+          // There's two children. Find in-order successor of the node. Copy
+          // contents of the in-order successor to the node and delete the
+          // in-order successor. Note that inorder predecessor can also be used.
+          Node* temp = kill->right;
+          while (temp->left) {
+               temp = temp->left;
+          }
+          kill->datum = temp->datum;
+          temp->parent->left = 0;
+          delete temp;
      }
 }
 
@@ -174,7 +174,7 @@ void BST::pre_order(Node* node) {
      if(!node) {
           return;
      } else {
-          std::cout << node->datum << std::endl;
+          std::cout << node->datum << " ";
           this->pre_order(node->left);
           this->pre_order(node->right);
      }
@@ -185,7 +185,7 @@ void BST::in_order(Node* node) {
           return;
      } else {
           this->in_order(node->left);
-          std::cout << node->datum << std::endl;
+          std::cout << node->datum << " ";
           this->in_order(node->right);
      }
 }
@@ -196,6 +196,6 @@ void BST::post_order(Node* node) {
      } else {
           this->post_order(node->left);
           this->post_order(node->right);
-          std::cout << node->datum << std::endl;
+          std::cout << node->datum << " ";
      }
 }

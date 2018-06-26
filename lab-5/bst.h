@@ -1,3 +1,4 @@
+#include <exception>
 class BST {
      class Node {
      public:
@@ -11,12 +12,12 @@ class BST {
      void in_order(Node*);
      void post_order(Node*);
      void ins_helper(Node*, Node*);
-     Node* find(int);
+     Node* find_addr(int);
 public:
      BST();
      ~BST();
+     void find(int);
      void ins(int);
-     int find_main(int);
      void del(int);
      void traverse(int);
 };
@@ -30,5 +31,17 @@ struct NoDups : public std::exception {
 struct NotFound : public std::exception {
      const char * what () const throw () {
           return "Node of entered datum could not be found! ";
+     }
+};
+
+struct EmptyTree : public std::exception {
+     const char * what () const throw () {
+          return "Tree is currently empty! There is nothing to delete. ";
+     }
+};
+
+struct BrokBools : public std::exception {
+     const char * what () const throw () {
+          return "Child determining booleans broken! ";
      }
 };
