@@ -103,6 +103,50 @@ void quick_sort(int *arr, int hi, int low) {
      }
 }
 
+int* merge(int *arr, int *leftArr, int *rightArr, int size) {
+     int *arr = new int[size];
+     int i = 0,
+         j = 0,
+         k = 0;
+     for (; j < size/2 && k < size-size/2; i++) {
+          if (leftArr[j] < rightArr[k]) {
+               arr[i] = leftArr[j];
+               j++;
+          }
+          else {
+               arr[i] = rightArr[k];
+               k++;
+          }
+     }
+
+     if (j == size/2) {
+          for(; i < size; i++, k++) {
+               arr[i] = rightArr[k];
+          }
+     }
+}
+
+void merge_sort(int *arr, int size) {
+     if (size <= 1) {
+          return;
+     } else {
+          int *leftArr = new int[size/2]
+          // size-size/2 rounds up instead of down
+          int *rightArr = new int[size - size/2];
+          for(int i = 0; i < size/2; i++) {
+               leftArr[i] = arr[i];
+          }
+          for(int i = size/2; i < size; i++) {
+               rightArr[i-size/2-1] - arr[i];
+          }
+          merge_sort(leftArr, size/2);
+          merge_sort(rightArr, size-size/2);
+          merge(arr, leftArr, rightArr, size);
+          delete leftArr;
+          delete rightArr;
+     }
+}
+
 void print_array(int *arr, int size) {
      std::cout << "{ " << arr[0];
      for(int i = 1; i < size; i++) {

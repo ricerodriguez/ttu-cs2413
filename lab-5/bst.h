@@ -45,3 +45,9 @@ struct BrokBools : public std::exception {
           return "Child determining booleans broken! ";
      }
 };
+
+struct MystErr : public std::exception {
+     const char * what () const throw () {
+          return "Something went wrong! Logic as we know it is wrong and it's the end of the world! Run for your lives! AAAAAAAAHHHHHH!!!";
+     }
+};
