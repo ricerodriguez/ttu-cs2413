@@ -71,7 +71,6 @@ BST::Node* BST::find_addr(int datum) {
 
 void BST::find(int datum) {
      bool lastDirLeft = false;
-     // bool firstDir = true;
      int count_left = 0;
      int count_right = 0;
      Node* temp = this->root;
@@ -79,7 +78,6 @@ void BST::find(int datum) {
           if(datum < temp->datum) {
                if(temp == this->root) {
                     std::cout << "Starting the search at the left of the root..." << std::endl;
-                    // firstDir = false;
                } else if(!lastDirLeft) {
                     std::cout << "Went right for " << count_right << " nodes, now going left..." << std::endl;
                     count_right = 0;
