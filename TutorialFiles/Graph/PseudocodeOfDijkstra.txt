@@ -1,0 +1,12 @@
+def dij(G,s) // G = graph, S = source (starting node)
+     instantiate priority queue => pq
+     set distance to each vertex to infinity
+     set distance to S to 0
+     push all vertices to pq
+     while pq is not empty:
+          pop pq into V
+          for each vertex adjacent to V (called v1)
+               new distance = distance from S to v + distance from v to v1
+               if new distance < distance from S to v1:
+                    distance from S to v1 = new distance
+                    adjust v1 position in pq based on new distance

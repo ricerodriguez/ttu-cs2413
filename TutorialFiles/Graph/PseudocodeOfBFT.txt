@@ -1,0 +1,10 @@
+def BFT(G, s): // G = graph, S = source
+     create a queue Q
+     push s to Q
+     while Q not empty:
+          pop Q into V
+          if V unvisited:
+               visit V
+               push all of V's adj unvisited nodes to Q
+          if Q empty and still unvisited nodes:
+               push 1 unvisited node to Q // for disconnected graphs
