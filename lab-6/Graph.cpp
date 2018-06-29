@@ -1,9 +1,20 @@
 #include <map>
-#include <queue>
 #include <list>
+#include <queue>
 #include <utility>
 #include <iostream>
-#include "Dijkstra.h"
+#include "Graph.h"
+
+bool Graph::operator () (Node* nodeA, Node* nodeB) {
+     char labelA = this->revNodeMap.find(nodeA)->second;
+     char labelB = this->revNodeMap.find(nodeB)->second;
+     if (nodeMapWt.at(labelA)<nodeMapWt.at(labelB)) {
+          return true;
+     } else {
+          return false;
+     }
+
+}
 
 Node::Node(char label) {
      this->label = label;
@@ -53,6 +64,7 @@ Graph::~Graph() {
           this->edgesQueue.pop();
      }
      this->nodeMap.clear();
+     this->revNodeMap.clear();
      this->nodeMapWt.clear();
      this->edgeMap.clear();
      delete this;
@@ -73,13 +85,14 @@ void Graph::remove_edge_(Edge *killEdge) {
 
 void Graph::remove_node_(Node *killNode) {
      this->nodeMap.erase(killNode->label);
+     this->revNodeMap.erase(killNode);
      this->nodeMapWt.erase(killNode->label);
      // Remove edges connected to node
-     Node *currNode = killNode->adjList.front();
+     Node *currNode = killNode->adjList.back();
      Edge *killEdge;
      // Go through list of adjacent nodes, start at the top
      while (!killNode->adjList.empty()) {
-          currNode = killNode->adjList.front();
+          currNode = killNode->adjList.back();
           // If there's an edge from the current node in the adjacency list to the node we're removing, remove it
           if (this->edgeMap.count(std::make_pair(currNode,killNode))) {
                // this->edgeMap.erase(std::make_pair(currNode,killNode));
@@ -89,7 +102,7 @@ void Graph::remove_node_(Node *killNode) {
                killEdge = this->edgeMap.find(std::make_pair(killNode,currNode))->second;
                this->remove_edge_(killEdge);
           }
-          killNode->adjList.pop_front();
+          killNode->adjList.pop_back();
      }
 }
 
@@ -118,6 +131,7 @@ Node* Graph::add_node_(char label) {
           newNode = new Node(label);
           // newNode->index = this->nodeMap.size();
           this->nodeMap[label] = newNode;
+          this->revNodeMap[newNode] = label;
           this->size++;
           this->nodeMapWt[label] = 2147483647; // max weight
      }
@@ -166,5 +180,35 @@ void Graph::print_nodes() {
      std::cout << "Nodes: " << std::endl;
      for (std::map<char,int>::iterator it = this->nodeMapWt.begin(); it != this->nodeMapWt.end(); ++it) {
           std::cout << "Node " << it->first << " is currently weighted at " << it->second << std::endl;
+     }
+}
+
+void Graph::BFT_(Node* start) {
+     // First, clear the queues
+     while (!unvisitedNodes.empty()) {
+          unvisitedNodes.pop();
+     }
+     while (!visitedNodes.empty()) {
+          visitedNodes.pop();
+     }
+
+     // Push starting node onto unvisited node queue
+     unvisitedNodes.push(start);
+     // Create Node objects to work with
+     Node *node = start;
+     Node *adjNode;
+     while (!unvisitedNodes.empty()) {
+          // Set working node to whatever is at the top of the unvisited nodes queue
+          node = unvisitedNodes.top();
+          //
+          while (!node->adjList.empty()) {
+               // Set adjacent node to the first node on the working node's adjacent nodes list
+               adjNode = node->adjList.front();
+               // Print out the working node and its connection to the adjacent node
+               std::cout << "Node " << node->label << " is connected to node " << adjNode->label << "." << std::endl;
+               unvisitedNodes.push(adjNode);
+               visitedNodes.push(start);
+               // adjList.pop_front();
+          }
      }
 }

@@ -6,4 +6,4 @@ and traverse. You should also be able to remove a node from the tree. At a
 minimum you must be able to traverse the tree with a pre, post, or in order
 depth first traversal.
 
-#### Status: Mostly finished
+#### Status: Finished

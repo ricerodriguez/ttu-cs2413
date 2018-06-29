@@ -1,11 +1,12 @@
+#include <map>
 #include <list>
+#include <queue>
+#include <string>
 #include <utility>
 #include <iostream>
-#include <queue>
-#include <map>
 #include <exception>
-#include <string>
-#include "Dijkstra.h"
+
+#include "Graph.h"
 
 int main() {
      Graph *grapharoo = new Graph();
@@ -14,7 +15,7 @@ int main() {
      std::string user_dir;
      // bool ask_again = true;
      menu:
-     std::cout << "Dijkstra's Menu: " << std::endl
+     std::cout << "Graph Menu: " << std::endl
                << "1. Add node to the graph" << std::endl
                << "2. Add edge to the graph" << std::endl
                << "3. Remove node from the graph" << std::endl

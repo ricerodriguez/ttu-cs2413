@@ -1,6 +1,6 @@
-#include <queue>
 #include <map>
 #include <list>
+#include <queue>
 #include <utility>
 #include <exception>
 
@@ -57,6 +57,7 @@ public:
 class Graph {
      friend class Node;
      std::map <char,Node*> nodeMap;
+     std::map <Node*,char> revNodeMap;
      std::map <char,int> nodeMapWt;
      std::map <NodePair,Edge*> edgeMap;
      std::map <int,Edge*> edgeMapWt;
@@ -65,9 +66,10 @@ class Graph {
      Node* add_node_(char);
      void remove_edge_(Edge*);
      void remove_node_(Node*);
-     void dijkstra_(Node*);
+     void BFT_(Node*);
 
 public:
+     bool operator () (Node*, Node*);
      Node* start;
      int size;
      void add_node(char);
@@ -75,10 +77,9 @@ public:
      void remove_edge(char,char);
      void remove_node(char);
      void print_nodes();
-     void dijkstra(char);
-     std::priority_queue<int> unvisitedNodes;
-     std::priority_queue<int> visitedNodes;
-     std::priority_queue<int> edgesQueue;
+     std::priority_queue<Node*> unvisitedNodes;
+     std::priority_queue<Node*> visitedNodes;
+     std::priority_queue<Edge*> edgesQueue;
      Graph();
      Graph(char);
      ~Graph();

@@ -1,0 +1,4 @@
+/home/rice/Documents/ttu-cs2413/lab-6/Graph.cpp: In member function ‘void Graph::BFT_(Node*)’:
+/home/rice/Documents/ttu-cs2413/lab-6/Graph.cpp:211:16: error: ‘adjList’ was not declared in this scope
+                adjList.pop_front();
+                ^
