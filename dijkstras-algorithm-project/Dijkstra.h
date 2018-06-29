@@ -28,27 +28,37 @@ struct EdgeNotFound : public std::exception {
      }
 };
 
+
+class Node {
+     friend class Edge;
+     friend class Graph;
+public:
+     char label;
+     int distToSrc, index;
+     std::list<Node*> adjList;
+     Node(char);
+     Node(char,int);
+};
+
+typedef std::pair<Node*,Node*> NodePair;
+
+class Edge {
+     friend class Graph;
+public:
+     // void add_node_(char);
+     // void remove_node_(Node*);
+     int weight;
+     Node *nodeTo, *nodeFrom;
+     NodePair path;
+     Edge(Node*,Node*,int);
+     ~Edge();
+};
+
 class Graph {
-     class Edge {
-     public:
-          class Node {
-          public:
-               char label;
-               int distToSrc, index;
-               std::list<Node*> adjList;
-               Node(char);
-               Node(char,int);
-          };
-          // void add_node_(char);
-          // void remove_node_(Node*);
-          int weight;
-          Node *nodeTo, *nodeFrom;
-          std::pair <Node*,Node*> path(nodeTo,nodeFrom);
-          Edge(Node*,Node*,int);
-          ~Edge();
-     };
-     std::map<char,Node*> nodeMap;
-     std::map <std::pair<Node*,Node*>,Edge*> edgeMap;
+     friend class Node;
+     std::map <char,Node*> nodeMap;
+     std::map <NodePair, Edge*> edgeMap;
+
      Edge* add_edge_(Node*,Node*,int);
      Node* add_node_(char);
      void remove_edge_(Edge*);
@@ -65,8 +75,8 @@ public:
      std::priority_queue<int> unvisitedNodes;
      std::priority_queue<int> visitedNodes;
      std::priority_queue<int> edgesQueue;
-     std::map<char,int> mapNodes;
+     std::map<char,int> nodeMapWt;
      Graph();
      Graph(char);
      ~Graph();
-}
+};

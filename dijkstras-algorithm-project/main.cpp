@@ -8,13 +8,13 @@
 #include "Dijkstra.h"
 
 int main() {
-     Graph grapharoo;
+     Graph *grapharoo = new Graph();
      int user_sel, user_weight;
-     char user_label_new, user_label_from, user_label_to;
+     char user_label, user_label_new, user_label_from, user_label_to;
      std::string user_dir;
      // bool ask_again = true;
      menu:
-     std::cout << "Dijkstra's Menu: " << std::endl;
+     std::cout << "Dijkstra's Menu: " << std::endl
                << "1. Add node to the graph" << std::endl
                << "2. Add edge to the graph" << std::endl
                << "3. Remove node from the graph" << std::endl
@@ -27,11 +27,11 @@ int main() {
                std::cout << "Enter a label for your new node: " << std::endl;
                std::cin >> user_label_new;
                try {
-                    grapharoo.add_node(user_label_new);
+                    grapharoo->add_node(user_label_new);
                } catch (std::exception &e) {
                     std::cerr << "ERROR: " << e.what() << std::endl;
                }
-               std::cout << "Done! A new node labeled " << user_label_new << " has been created."
+               std::cout << "Done! A new node labeled " << user_label_new << " has been created." << std::endl;
                std::cout << "Returning to menu..." << std::endl;
                goto menu;
 
@@ -42,12 +42,12 @@ int main() {
                std::cin >> user_label_to;
                std::cout << "Enter length of edge, i.e. distance from node " << user_label_from << " to node " << user_label_to << ":" << std::endl;
                std::cin >> user_weight;
-               std::cout << "Is this edge directed or undirected?"
+               std::cout << "Is this edge directed or undirected?" << std::endl;
                std::cin >> user_dir;
                while (true) {
                     if (user_dir == "directed") {
                          try {
-                              grapharoo.add_edge(user_label_from, user_label_to, user_weight);
+                              grapharoo->add_edge(user_label_from, user_label_to, user_weight);
                          } catch (std::exception &e) {
                               std::cerr << "ERROR: " << e.what() << std::endl;
                          }
@@ -56,8 +56,8 @@ int main() {
                          goto menu;
                     } else if (user_dir == "undirected") {
                          try {
-                              grapharoo.add_edge(user_label_from, user_label_to, user_weight);
-                              grapharoo.add_edge(user_label_to, user_label_from, user_weight);
+                              grapharoo->add_edge(user_label_from, user_label_to, user_weight);
+                              grapharoo->add_edge(user_label_to, user_label_from, user_weight);
                          } catch (std::exception &e) {
                               std::cerr << "ERROR: " << e.what() << std::endl;
                          }
@@ -82,7 +82,7 @@ int main() {
                std::cout << "Enter the label of the node you'd like to remove: " << std::endl;
                std::cin >> user_label;
                try {
-                    grapharoo.remove_node(user_label);
+                    grapharoo->remove_node(user_label);
                } catch (std::exception &e) {
                     std::cerr << "ERROR: " << e.what() << std::endl;
                }
@@ -95,12 +95,12 @@ int main() {
                std::cin >> user_label_from;
                std::cout << "Enter the node this edge ends on: " << std::endl;
                std::cin >> user_label_to;
-               std::cout << "Is this edge directed or undirected?"
+               std::cout << "Is this edge directed or undirected?" << std::endl;
                std::cin >> user_dir;
                while (true) {
                     if (user_dir == "directed") {
                          try {
-                              grapharoo.remove_edge(user_label_from, user_label_to);
+                              grapharoo->remove_edge(user_label_from, user_label_to);
                          } catch (std::exception &e) {
                               std::cerr << "ERROR: " << e.what() << std::endl;
                          }
@@ -109,8 +109,8 @@ int main() {
                          goto menu;
                     } else if (user_dir == "undirected") {
                          try {
-                              grapharoo.remove_edge(user_label_from, user_label_to);
-                              grapharoo.remove_edge(user_label_to, user_label_from);
+                              grapharoo->remove_edge(user_label_from, user_label_to);
+                              grapharoo->remove_edge(user_label_to, user_label_from);
                          } catch (std::exception &e) {
                               std::cerr << "ERROR: " << e.what() << std::endl;
                          }

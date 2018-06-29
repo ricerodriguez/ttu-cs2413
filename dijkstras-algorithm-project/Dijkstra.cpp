@@ -5,27 +5,34 @@
 #include "Dijkstra.h"
 
 
-Graph::Edge::Node::Node(char label) {
+Node::Node(char label) {
      this->label = label;
      this->distToSrc = 2147483647; // max of int
-     this->adjList = 0;
+     this->adjList.clear();
+     Graph g;
+     g.nodeMap[label] = this;
 }
 
-Graph::Edge::Node::Node(char label, int distToSrc) {
+Node::Node(char label, int distToSrc) {
      this->label = label;
      this->distToSrc = distToSrc;
-     this->adjList = 0;
+     this->adjList.clear();
 }
 
-Graph::Edge::Edge(Node* nodeFrom, Node* nodeTo, int weight) {
+Edge::Edge(Node* nodeFrom, Node* nodeTo, int weight) {
      this->nodeFrom = nodeFrom;
      this->nodeTo = nodeTo;
      this->weight = weight;
      this->path = std::make_pair(nodeFrom,nodeTo);
 }
 
-Graph::Edge::~Edge() {
+Edge::~Edge() {
+     delete this->nodeTo;
+     delete this->nodeFrom;
+}
 
+Graph::Graph() {
+     this->size = 0;
 }
 
 Graph::Graph(char label) {
@@ -34,7 +41,10 @@ Graph::Graph(char label) {
 }
 
 Graph::~Graph() {
-
+     this->size = 0;
+     while (!this->unvisitedNodes.empty()) {
+          this->unvisitedNodes.pop();
+     }
 }
 
 void Graph::remove_edge_(Edge *killEdge) {
@@ -44,7 +54,7 @@ void Graph::remove_edge_(Edge *killEdge) {
      killEdge->nodeTo = 0;
      killEdge->nodeFrom = 0;
      this->edgeMap.erase(killEdge->path);
-     killEdge->path = 0;
+     killEdge->path = std::make_pair(killEdge->nodeTo,killEdge->nodeFrom);
      killEdge = 0;
      // delete killEdge;
 }
@@ -70,7 +80,7 @@ void Graph::remove_node_(Node *killNode) {
      }
 }
 
-Graph::Edge* Graph::add_edge_(Node* nodeFrom, Node* nodeTo, int weight) {
+Edge* Graph::add_edge_(Node* nodeFrom, Node* nodeTo, int weight) {
      // Does this edge already exist? Check the map of the edges for anything from nodeFrom to nodeTo.
      // if (this->edgeMap.find(std::make_pair(nodeFrom,nodeTo))->first == std::make_pair(nodeFrom,nodeTo)) {
      if (this->edgeMap.count(std::make_pair(nodeFrom,nodeTo))) {
@@ -79,15 +89,16 @@ Graph::Edge* Graph::add_edge_(Node* nodeFrom, Node* nodeTo, int weight) {
      } else {
           // Otherwise, create a new edge
           Edge *newEdge = new Edge(nodeFrom, nodeTo, weight);
-     }
      return newEdge;
 }
+}
 
-Graph::Edge::Node* Graph::add_node_(char label) {
+Node* Graph::add_node_(char label) {
+     Node *newNode;
      if (this->nodeMap.count(label)) {
           throw NoDups();
      } else {
-          Node *newNode = new Node(label);
+          newNode = new Node(label);
           // newNode->index = this->nodeMap.size();
      }
      this->size++;
