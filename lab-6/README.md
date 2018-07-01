@@ -6,4 +6,4 @@ your graph you must implement a Breadth first search and execute the breadth on
 your constructed graph. Display the nodes in the order that they are visited by
 your breadth first search.
 
-#### Status: Eh..
+#### Status: Finished

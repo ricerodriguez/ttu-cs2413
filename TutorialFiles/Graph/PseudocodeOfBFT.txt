@@ -5,6 +5,7 @@ def BFT(G, s): // G = graph, S = source
           pop Q into V
           if V unvisited:
                visit V
-               push all of V's adj unvisited nodes to Q
+               push all of V's adj unvisited nodes to Q // as you're pushing you can mark them visited or not
           if Q empty and still unvisited nodes:
                push 1 unvisited node to Q // for disconnected graphs
+// Depth First uses stack, Breadth First uses queue. This will be on final.

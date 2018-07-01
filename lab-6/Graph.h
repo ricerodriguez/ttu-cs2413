@@ -1,6 +1,6 @@
 #include <map>
-#include <list>
 #include <queue>
+#include <vector>
 #include <utility>
 #include <exception>
 
@@ -33,11 +33,11 @@ class Node {
      friend class Edge;
      friend class Graph;
 public:
-     char label;
-     int distToSrc, index;
-     std::list<Node*> adjList;
      Node(char);
      Node(char,int);
+     char label;
+     int distToSrc, index;
+     std::vector<Node*> adjVect;
 };
 
 typedef std::pair<Node*,Node*> NodePair;
@@ -45,42 +45,48 @@ typedef std::pair<Node*,Node*> NodePair;
 class Edge {
      friend class Graph;
 public:
-     // void add_node_(char);
-     // void remove_node_(Node*);
+     Edge(Node*,Node*,int);
+     ~Edge();
      int weight;
      Node *nodeTo, *nodeFrom;
      NodePair path;
-     Edge(Node*,Node*,int);
-     ~Edge();
 };
+
+struct NodeQueueSorter {
+     bool operator() (Node* a, Node *b) {
+          return a->distToSrc > b->distToSrc;
+     }
+};
+
+struct EdgeQueueSorter {
+     bool operator() (Edge* a, Edge *b) {
+          return a->weight > b->weight;
+     }
+};
+
+
+typedef std::priority_queue<Node*, std::vector<Node*>, NodeQueueSorter> NodeQueue;
+
 
 class Graph {
      friend class Node;
      std::map <char,Node*> nodeMap;
      std::map <Node*,char> revNodeMap;
-     std::map <char,int> nodeMapWt;
      std::map <NodePair,Edge*> edgeMap;
-     std::map <int,Edge*> edgeMapWt;
 
-     Edge* add_edge_(Node*,Node*,int);
-     Node* add_node_(char);
-     void remove_edge_(Edge*);
-     void remove_node_(Node*);
      void BFT_(Node*);
+     Node* add_node_(char);
+     Edge* add_edge_(Node*,Node*,int);
 
 public:
-     bool operator () (Node*, Node*);
-     Node* start;
      int size;
+     Node* start;
+     void BFT(char);
      void add_node(char);
      void add_edge(char,char,int);
-     void remove_edge(char,char);
-     void remove_node(char);
-     void print_nodes();
-     std::priority_queue<Node*> unvisitedNodes;
-     std::priority_queue<Node*> visitedNodes;
-     std::priority_queue<Edge*> edgesQueue;
      Graph();
      Graph(char);
      ~Graph();
+     NodeQueue unvisitedNodes;
+     std::vector<Node*> visitedNodes;
 };

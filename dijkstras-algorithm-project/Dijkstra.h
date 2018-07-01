@@ -1,6 +1,6 @@
-#include <queue>
 #include <map>
-#include <list>
+#include <queue>
+#include <vector>
 #include <utility>
 #include <exception>
 
@@ -28,16 +28,22 @@ struct EdgeNotFound : public std::exception {
      }
 };
 
+struct InvStart : public std::exception {
+     const char * what () const throw () {
+          return "You can't use this node as a starting position because there are no outgoing edges connected to it! ";
+     }
+};
+
 
 class Node {
      friend class Edge;
      friend class Graph;
 public:
-     char label;
-     int distToSrc, index;
-     std::list<Node*> adjList;
      Node(char);
      Node(char,int);
+     char label;
+     int distToSrc, index;
+     std::vector<Node*> adjVect;
 };
 
 typedef std::pair<Node*,Node*> NodePair;
@@ -45,40 +51,60 @@ typedef std::pair<Node*,Node*> NodePair;
 class Edge {
      friend class Graph;
 public:
-     // void add_node_(char);
-     // void remove_node_(Node*);
+     Edge(Node*,Node*,int);
+     ~Edge();
      int weight;
      Node *nodeTo, *nodeFrom;
      NodePair path;
-     Edge(Node*,Node*,int);
-     ~Edge();
 };
+
+struct NodeQueueSorter {
+     bool operator() (Node* a, Node *b) {
+          return a->distToSrc > b->distToSrc;
+     }
+};
+
+struct EdgeQueueSorter {
+     bool operator() (Edge* a, Edge *b) {
+          return a->weight > b->weight;
+     }
+};
+
+typedef std::priority_queue<Node*, std::vector<Node*>, NodeQueueSorter> NodeQueue;
+typedef std::priority_queue<Edge*, std::vector<Edge*>, EdgeQueueSorter> EdgeQueue;
 
 class Graph {
      friend class Node;
      std::map <char,Node*> nodeMap;
+     std::map <Node*,char> revNodeMap;
      std::map <char,int> nodeMapWt;
      std::map <NodePair,Edge*> edgeMap;
-     std::map <int,Edge*> edgeMapWt;
+     std::map <Edge*,int> edgeMapWt;
 
-     Edge* add_edge_(Node*,Node*,int);
+     void BFT_(Node*);
+     void dijkstra_(Node*,Node*);
      Node* add_node_(char);
      void remove_edge_(Edge*);
      void remove_node_(Node*);
-     void dijkstra_(Node*);
+     int distToNode_(Node*,Node*);
+     Edge* add_edge_(Node*,Node*,int);
+     bool hasOutgoingEdges_(Node*);
+     void updateDist_(Node*);
 
 public:
-     Node* start;
      int size;
-     void add_node(char);
-     void add_edge(char,char,int);
-     void remove_edge(char,char);
-     void remove_node(char);
+     Node* start;
+     void BFT(char);
      void print_nodes();
-     void dijkstra(char);
-     std::priority_queue<int> unvisitedNodes;
-     std::priority_queue<int> visitedNodes;
-     std::priority_queue<int> edgesQueue;
+     void dijkstra(char,char);
+     void add_node(char);
+     void remove_node(char);
+     void remove_edge(char,char);
+     void add_edge(char,char,int);
+     NodeQueue unvisitedNodes;
+     EdgeQueue edgesQueue;
+     NodeQueue finalQueue;
+     std::vector<Node*> visitedNodes;
      Graph();
      Graph(char);
      ~Graph();
