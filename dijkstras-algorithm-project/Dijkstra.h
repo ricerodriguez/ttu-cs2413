@@ -10,6 +10,12 @@ struct EdgeExists : public std::exception {
      }
 };
 
+struct EdgesThere : public std::exception {
+     const char * what () const throw () {
+          return "There are edges connected to this node. Delete those edges first! ";
+     }
+};
+
 struct NoDups : public std::exception {
      const char * what () const throw () {
           return "No duplicate nodes allowed! Choose a different label and try again. ";
@@ -55,7 +61,7 @@ public:
      ~Edge();
      int weight;
      Node *nodeTo, *nodeFrom;
-     NodePair path;
+     // NodePair path;
 };
 
 struct NodeQueueSorter {

@@ -34,6 +34,8 @@ int main() {
                     grapharoo->add_node(user_label);
                } catch (std::exception &e) {
                     std::cerr << "ERROR: " << e.what() << std::endl;
+                    std::cout << "Returning to menu..." << std::endl;
+                    goto menu;
                }
                std::cout << "Done! A new node labeled " << user_label << " has been created." << std::endl;
                std::cout << "Returning to menu..." << std::endl;
@@ -54,6 +56,8 @@ int main() {
                               grapharoo->add_edge(user_label_from, user_label_to, user_weight);
                          } catch (std::exception &e) {
                               std::cerr << "ERROR: " << e.what() << std::endl;
+                              std::cout << "Returning to menu..." << std::endl;
+                              goto menu;
                          }
                          std::cout << "Done! A new edge has been created, connecting node " << user_label_from << " to node " << user_label_to << " in one direction." << std::endl;
                          std::cout << "Returning to menu..." << std::endl;
@@ -64,6 +68,8 @@ int main() {
                               grapharoo->add_edge(user_label_to, user_label_from, user_weight);
                          } catch (std::exception &e) {
                               std::cerr << "ERROR: " << e.what() << std::endl;
+                              std::cout << "Returning to menu..." << std::endl;
+                              goto menu;
                          }
                          std::cout << "Done! A new edge has been created, connecting node " << user_label_from << " to node " << user_label_to << " going both directions." << std::endl;
                          std::cout << "Returning to menu..." << std::endl;
@@ -89,6 +95,8 @@ int main() {
                     grapharoo->remove_node(user_label);
                } catch (std::exception &e) {
                     std::cerr << "ERROR: " << e.what() << std::endl;
+                    std::cout << "Returning to menu..." << std::endl;
+                    goto menu;
                }
                std::cout << "Done, node " << user_label << " and all connecting edges have been removed." << std::endl;
                std::cout << "Returning to menu..." << std::endl;
@@ -107,6 +115,8 @@ int main() {
                               grapharoo->remove_edge(user_label_from, user_label_to);
                          } catch (std::exception &e) {
                               std::cerr << "ERROR: " << e.what() << std::endl;
+                              std::cout << "Returning to menu..." << std::endl;
+                              goto menu;
                          }
                          std::cout << "Done! The edge connecting node " << user_label_from << " to node " << user_label_to << " in one direction has been removed." << std::endl;
                          std::cout << "Returning to menu..." << std::endl;
@@ -117,6 +127,8 @@ int main() {
                               grapharoo->remove_edge(user_label_to, user_label_from);
                          } catch (std::exception &e) {
                               std::cerr << "ERROR: " << e.what() << std::endl;
+                              std::cout << "Returning to menu..." << std::endl;
+                              goto menu;
                          }
                          std::cout << "Done! The edge connecting node " << user_label_from << " to node " << user_label_to << " going both directions has been removed." << std::endl;
                          std::cout << "Returning to menu..." << std::endl;
@@ -146,6 +158,8 @@ int main() {
                     grapharoo->BFT(user_label);
                } catch (std::exception &e){
                     std::cerr << "ERROR: " << e.what() << std::endl;
+                    std::cout << "Returning to menu..." << std::endl;
+                    goto menu;
                }
                goto menu;
 
@@ -158,6 +172,8 @@ int main() {
                     grapharoo->dijkstra(user_label_from, user_label_to);
                } catch (std::exception &e){
                     std::cerr << "ERROR: " << e.what() << std::endl;
+                    std::cout << "Returning to menu..." << std::endl;
+                    goto menu;
                }
                goto menu;
 

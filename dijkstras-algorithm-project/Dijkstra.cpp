@@ -22,7 +22,7 @@ Edge::Edge(Node* nodeFrom, Node* nodeTo, int weight) {
      this->nodeFrom = nodeFrom;
      this->nodeTo = nodeTo;
      this->weight = weight;
-     this->path = std::make_pair(nodeFrom,nodeTo);
+     // this->path = std::make_pair(nodeFrom,nodeTo);
 }
 
 Edge::~Edge() {
@@ -113,25 +113,31 @@ void Graph::remove_node(char label) {
 }
 
 void Graph::remove_node_(Node *killNode) {
-     this->nodeMap.erase(killNode->label);
-     this->revNodeMap.erase(killNode);
-     this->nodeMapWt.erase(killNode->label);
-     // Remove edges connected to node
-     Node *currNode = killNode->adjVect.back();
-     Edge *killEdge;
-     // Go through list of adjacent nodes, start at the top
-     while (!killNode->adjVect.empty()) {
-          currNode = killNode->adjVect.back();
-          // If there's an edge from the current node in the adjacency list to the node we're removing, remove it
-          if (this->edgeMap.count(std::make_pair(currNode,killNode))) {
-               killEdge = this->edgeMap.find(std::make_pair(currNode,killNode))->second;
-               this->remove_edge_(killEdge);
-          } else if (this->edgeMap.count(std::make_pair(killNode,currNode))) {
-               killEdge = this->edgeMap.find(std::make_pair(killNode,currNode))->second;
-               this->remove_edge_(killEdge);
-          }
-          killNode->adjVect.pop_back();
+     // Throw an error if there are adjacent nodes
+     if (!killNode->adjVect.empty()) {
+          throw EdgesThere();
+     } else {
+          this->nodeMap.erase(killNode->label);
+          this->revNodeMap.erase(killNode);
+          this->nodeMapWt.erase(killNode->label);
+          delete killNode;
      }
+     // // Remove edges connected to node
+     // Node *currNode = killNode->adjVect.back();
+     // Edge *killEdge;
+     // // Go through list of adjacent nodes, start at the top
+     // while (!killNode->adjVect.empty()) {
+     //      currNode = killNode->adjVect.back();
+     //      // If there's an edge from the current node in the adjacency list to the node we're removing, remove it
+     //      if (this->edgeMap.count(std::make_pair(currNode,killNode))) {
+     //           killEdge = this->edgeMap.find(std::make_pair(currNode,killNode))->second;
+     //           this->remove_edge_(killEdge);
+     //      } else if (this->edgeMap.count(std::make_pair(killNode,currNode))) {
+     //           killEdge = this->edgeMap.find(std::make_pair(killNode,currNode))->second;
+     //           this->remove_edge_(killEdge);
+     //      }
+     //      killNode->adjVect.pop_back();
+     // }
 }
 
 void Graph::remove_edge(char labelFrom, char labelTo) {
@@ -150,17 +156,18 @@ void Graph::remove_edge(char labelFrom, char labelTo) {
 }
 
 void Graph::remove_edge_(Edge *killEdge) {
-     killEdge->path = std::make_pair(killEdge->nodeFrom, killEdge->nodeTo);
+     // killEdge->path = std::make_pair(killEdge->nodeFrom, killEdge->nodeTo);
      std::vector<Node*>::iterator iTo, iFrom;
      iFrom = std::find(killEdge->nodeTo->adjVect.begin(), killEdge->nodeTo->adjVect.end(), killEdge->nodeFrom);
      iTo = std::find(killEdge->nodeFrom->adjVect.begin(), killEdge->nodeFrom->adjVect.end(), killEdge->nodeTo);
      killEdge->nodeFrom->adjVect.erase(iTo);
      killEdge->nodeTo->adjVect.erase(iFrom);
+     // this->edgeMap.erase(killEdge->path);
+     this->edgeMap.erase(std::make_pair(killEdge->nodeFrom, killEdge->nodeTo));
+     this->edgeMapWt.erase(killEdge);
      killEdge->nodeTo = 0;
      killEdge->nodeFrom = 0;
-     this->edgeMap.erase(killEdge->path);
-     this->edgeMapWt.erase(killEdge);
-     killEdge->path = std::make_pair(killEdge->nodeFrom, killEdge->nodeTo);
+     // killEdge->path = std::make_pair(killEdge->nodeFrom, killEdge->nodeTo);
      killEdge = 0;
 }
 
@@ -289,9 +296,13 @@ void Graph::updateDist_(Node* node) {
      for (std::vector<Node*>::iterator it = node->adjVect.begin(); it != node->adjVect.end(); ++it) {
           adjNode = *it;
           if (this->distToNode_(node, adjNode) != 0) {
-               temp_dist = node->distToSrc + distToNode_(node, adjNode);
-               if (temp_dist < adjNode->distToSrc) {
-                    adjNode->distToSrc = temp_dist;
+               if (node->distToSrc == 2147483647) {
+                    continue;
+               } else {
+                    temp_dist = node->distToSrc + distToNode_(node, adjNode);
+                    if (temp_dist < adjNode->distToSrc) {
+                         adjNode->distToSrc = temp_dist;
+                    }
                }
           } else {
                continue;
